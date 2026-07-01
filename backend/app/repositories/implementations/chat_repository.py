@@ -66,6 +66,8 @@ class ChatRepository(IChatRepository):
             base.order_by(Chat.updated_at.desc()).offset(offset).limit(limit)
         )
         return list(result.scalars().all()), total or 0
+
+    async def add_message(self, message: Message) -> Message:
         self._session.add(message)
         await self._session.flush()
         # Refresh only server-generated timestamps to avoid expiring the
