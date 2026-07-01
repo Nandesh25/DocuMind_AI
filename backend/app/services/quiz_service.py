@@ -3,7 +3,7 @@ import json
 import re
 from uuid import UUID
 
-from app.ai.llm.ollama_client import OllamaClient
+from app.ai.llm.base import ILLMClient
 from app.core.constants import DocumentStatus
 from app.core.exceptions import NotFoundError, ValidationError
 from app.models.document import Document
@@ -22,7 +22,7 @@ class QuizService:
         self,
         document_repo: IDocumentRepository,
         workspace_service: WorkspaceService,
-        llm_client: OllamaClient,
+        llm_client: ILLMClient,
     ):
         self._documents = document_repo
         self._workspaces = workspace_service

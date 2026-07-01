@@ -5,7 +5,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.ai.embeddings.minilm_embedder import get_embedder
-from app.ai.llm.ollama_client import get_llm_client
+from app.ai.llm.factory import get_llm_client
 from app.core.constants import TokenType
 from app.core.exceptions import UnauthorizedError
 from app.core.security import decode_token

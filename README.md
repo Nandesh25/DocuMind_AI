@@ -137,6 +137,14 @@ DocuMind_AI/
 
 Everything is env-driven — no code changes required to switch providers.
 
+To use a hosted LLM instead of Ollama, set:
+```
+LLM_PROVIDER=openai
+OPENAI_BASE_URL=https://api.groq.com/openai/v1   # or OpenRouter, Together, OpenAI
+OPENAI_API_KEY=<your-key>
+OPENAI_MODEL=llama-3.1-8b-instant
+```
+
 ---
 
 ## License

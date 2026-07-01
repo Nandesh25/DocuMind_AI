@@ -43,6 +43,13 @@ class Settings(BaseSettings):
     OLLAMA_TEMPERATURE: float = 0.2
     OLLAMA_NUM_CTX: int = 8192
     OLLAMA_MAX_TOKENS: int = 1024
+
+    # LLM provider: "ollama" (self-hosted) or "openai" (any OpenAI-compatible
+    # endpoint such as Groq / OpenRouter / Together — good for free hosting).
+    LLM_PROVIDER: str = "ollama"
+    OPENAI_API_KEY: str = ""
+    OPENAI_BASE_URL: str = "https://api.openai.com/v1"
+    OPENAI_MODEL: str = "gpt-4o-mini"
     EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"
     EMBEDDING_DIMENSIONS: int = 384
     EMBEDDING_BATCH_SIZE: int = 32

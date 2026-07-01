@@ -39,10 +39,13 @@ def create_app() -> FastAPI:
 
             await init_models()
         logger.info(
-            "%s started (env=%s, llm=%s, embeddings=%s)",
+            "%s started (env=%s, llm=%s/%s, embeddings=%s)",
             settings.APP_NAME,
             settings.APP_ENV,
-            settings.OLLAMA_MODEL,
+            settings.LLM_PROVIDER,
+            settings.OPENAI_MODEL
+            if settings.LLM_PROVIDER.lower() == "openai"
+            else settings.OLLAMA_MODEL,
             settings.EMBEDDING_MODEL,
         )
 

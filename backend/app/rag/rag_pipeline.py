@@ -13,7 +13,7 @@ from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from uuid import UUID
 
-from app.ai.llm.ollama_client import OllamaClient
+from app.ai.llm.base import ILLMClient
 from app.models.document_chunk import DocumentChunk
 from app.rag.prompt_templates import build_rag_prompt
 from app.rag.retriever import Retriever
@@ -46,7 +46,7 @@ class RAGAnswer:
 
 
 class RAGPipeline:
-    def __init__(self, retriever: Retriever, llm: OllamaClient):
+    def __init__(self, retriever: Retriever, llm: ILLMClient):
         self._retriever = retriever
         self._llm = llm
 
