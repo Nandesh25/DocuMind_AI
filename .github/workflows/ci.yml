@@ -80,3 +80,27 @@ jobs:
 
       - name: Unit tests
         run: python -m pytest tests/unit
+
+  backend-integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install fastapi "sqlalchemy[asyncio]" greenlet python-multipart \
+            "python-jose[cryptography]" bcrypt email-validator pydantic pydantic-settings \
+            pytest pytest-asyncio httpx aiosqlite
+
+      - name: Integration tests (SQLite)
+        run: python -m pytest tests/integration

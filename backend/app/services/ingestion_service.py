@@ -5,7 +5,7 @@ import asyncio
 from app.ai.embeddings.minilm_embedder import get_embedder
 from app.core.constants import DocumentStatus
 from app.core.logging import get_logger
-from app.database.session import AsyncSessionLocal
+from app.database.session import get_sessionmaker
 from app.models.document_chunk import DocumentChunk
 from app.models.embedding_metadata import EmbeddingMetadata
 from app.rag.chunker import estimate_tokens
@@ -25,7 +25,7 @@ class IngestionService:
     """
 
     async def ingest(self, document_id: UUID) -> None:
-        async with AsyncSessionLocal() as session:
+        async with get_sessionmaker()() as session:
             repo = DocumentRepository(session)
             document = await repo.get_by_id(document_id)
             if document is None:

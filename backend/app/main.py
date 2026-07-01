@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, Request
@@ -13,6 +14,27 @@ configure_logging()
 logger = get_logger(__name__)
 
 
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    Path(settings.STORAGE_DIR).mkdir(parents=True, exist_ok=True)
+    Path(settings.CHROMA_DIR).mkdir(parents=True, exist_ok=True)
+    if settings.AUTO_CREATE_TABLES:
+        from app.database.init_db import init_models
+
+        await init_models()
+    logger.info(
+        "%s started (env=%s, llm=%s/%s, embeddings=%s)",
+        settings.APP_NAME,
+        settings.APP_ENV,
+        settings.LLM_PROVIDER,
+        settings.OPENAI_MODEL
+        if settings.LLM_PROVIDER.lower() == "openai"
+        else settings.OLLAMA_MODEL,
+        settings.EMBEDDING_MODEL,
+    )
+    yield
+
+
 def create_app() -> FastAPI:
     app = FastAPI(
         title=settings.APP_NAME,
@@ -20,6 +42,7 @@ def create_app() -> FastAPI:
         debug=settings.DEBUG,
         openapi_url=f"{settings.API_V1_PREFIX}/openapi.json",
         docs_url="/docs",
+        lifespan=lifespan,
     )
 
     app.add_middleware(
@@ -29,25 +52,6 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-
-    @app.on_event("startup")
-    async def _startup() -> None:
-        Path(settings.STORAGE_DIR).mkdir(parents=True, exist_ok=True)
-        Path(settings.CHROMA_DIR).mkdir(parents=True, exist_ok=True)
-        if settings.AUTO_CREATE_TABLES:
-            from app.database.init_db import init_models
-
-            await init_models()
-        logger.info(
-            "%s started (env=%s, llm=%s/%s, embeddings=%s)",
-            settings.APP_NAME,
-            settings.APP_ENV,
-            settings.LLM_PROVIDER,
-            settings.OPENAI_MODEL
-            if settings.LLM_PROVIDER.lower() == "openai"
-            else settings.OLLAMA_MODEL,
-            settings.EMBEDDING_MODEL,
-        )
 
     @app.exception_handler(AppException)
     async def _app_exception_handler(
