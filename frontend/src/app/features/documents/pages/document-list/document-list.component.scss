@@ -1,0 +1,79 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  h1 {
+    margin: 0 0 4px;
+  }
+  p {
+    margin: 0;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+
+  .search-field {
+    flex: 1;
+    min-width: 240px;
+  }
+
+  mat-icon {
+    cursor: pointer;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.doc-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--mat-sys-tertiary-container);
+  color: var(--mat-sys-on-tertiary-container);
+}
+
+.doc-menu {
+  margin-left: auto;
+}
+
+.doc-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.proc-bar {
+  margin-top: 12px;
+}
+
+.meta-text {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.8rem;
+  margin: 8px 0 0;
+}
+
+.error-text {
+  color: var(--mat-sys-error);
+  font-size: 0.8rem;
+  margin: 8px 0 0;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  padding: 64px;
+}

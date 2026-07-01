@@ -1,0 +1,26 @@
+# Environment / secrets
+.env
+**/.env
+!**/.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+
+# Data & artifacts
+backend/storage/
+backend/chroma/
+*.sqlite3
+
+# OS / editor
+.DS_Store
+*.log
+.idea/
+.vscode/

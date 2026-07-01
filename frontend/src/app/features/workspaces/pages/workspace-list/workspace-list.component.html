@@ -1,0 +1,62 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Workspaces</h1>
+      <p>Organize documents and collaborate with your team.</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="create()">
+      <mat-icon>add</mat-icon>
+      New Workspace
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="center"><mat-progress-spinner mode="indeterminate" diameter="40" /></div>
+  } @else if (workspaces().length === 0) {
+    <app-empty-state
+      icon="folder_shared"
+      title="No workspaces yet"
+      message="Create your first workspace to start uploading documents."
+    >
+      <button mat-flat-button color="primary" (click)="create()">
+        <mat-icon>add</mat-icon>
+        New Workspace
+      </button>
+    </app-empty-state>
+  } @else {
+    <div class="grid">
+      @for (ws of workspaces(); track ws.id) {
+        <mat-card class="ws-card" (click)="open(ws)">
+          <mat-card-header>
+            <div mat-card-avatar class="ws-avatar">
+              <mat-icon>folder</mat-icon>
+            </div>
+            <mat-card-title>{{ ws.name }}</mat-card-title>
+            <mat-card-subtitle>Updated {{ ws.created_at | timeAgo }}</mat-card-subtitle>
+            <button
+              mat-icon-button
+              class="ws-menu"
+              [matMenuTriggerFor]="menu"
+              (click)="$event.stopPropagation()"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="edit(ws, $event)">
+                <mat-icon>edit</mat-icon>
+                <span>Edit</span>
+              </button>
+              <button mat-menu-item (click)="remove(ws, $event)">
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="ws-desc">{{ ws.description || 'No description' }}</p>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

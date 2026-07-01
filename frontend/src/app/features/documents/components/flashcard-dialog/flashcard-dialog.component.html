@@ -1,0 +1,69 @@
+<h2 mat-dialog-title>
+  <mat-icon class="title-icon">style</mat-icon>
+  Flashcards
+</h2>
+<p class="doc-title">{{ data.title }}</p>
+
+<mat-dialog-content>
+  <div class="controls">
+    <mat-form-field appearance="outline" class="count-field">
+      <mat-label>Cards</mat-label>
+      <mat-select [value]="numCards()" (valueChange)="numCards.set($event)">
+        @for (c of counts; track c) {
+          <mat-option [value]="c">{{ c }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <button
+      mat-flat-button
+      color="primary"
+      [disabled]="generating()"
+      (click)="generate()"
+    >
+      <mat-icon>auto_awesome</mat-icon> Generate
+    </button>
+  </div>
+
+  @if (generating()) {
+    <div class="center">
+      <mat-progress-spinner mode="indeterminate" diameter="36" />
+      <span>Building your flashcards…</span>
+    </div>
+  } @else {
+    @if (current(); as card) {
+      <div class="flashcard" [class.flipped]="flipped()" (click)="flip()">
+        <div class="face front">
+          <span class="tag">Front</span>
+          <p class="text">{{ card.front }}</p>
+          @if (card.hint) {
+            <p class="hint">💡 {{ card.hint }}</p>
+          }
+          <span class="tap">Tap to flip</span>
+        </div>
+        <div class="face back">
+          <span class="tag">Back</span>
+          <p class="text">{{ card.back }}</p>
+          <span class="tap">Tap to flip</span>
+        </div>
+      </div>
+
+      <div class="nav">
+        <button mat-icon-button [disabled]="index() === 0" (click)="prev()">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <span class="progress">{{ index() + 1 }} / {{ cards().length }}</span>
+        <button
+          mat-icon-button
+          [disabled]="index() === cards().length - 1"
+          (click)="next()"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    }
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

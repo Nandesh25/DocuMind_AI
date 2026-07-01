@@ -1,0 +1,136 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Documents</h1>
+      <p>Upload and manage documents for AI-powered retrieval.</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="upload()">
+      <mat-icon>upload</mat-icon>
+      Upload
+    </button>
+  </div>
+
+  <div class="filters">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search by title</mat-label>
+      <input
+        matInput
+        #searchBox
+        (keyup.enter)="onSearch(searchBox.value)"
+      />
+      <mat-icon matSuffix (click)="onSearch(searchBox.value)">search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select
+        [value]="statusFilter()"
+        (valueChange)="onStatusChange($event)"
+      >
+        <mat-option value="">All</mat-option>
+        <mat-option value="processing">Processing</mat-option>
+        <mat-option value="indexed">Indexed</mat-option>
+        <mat-option value="failed">Failed</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      mat-stroked-button
+      (click)="compare()"
+      matTooltip="Compare two documents"
+    >
+      <mat-icon>compare_arrows</mat-icon>
+      Compare
+    </button>
+
+    <button mat-icon-button (click)="load()" matTooltip="Refresh">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="center"><mat-progress-spinner mode="indeterminate" diameter="40" /></div>
+  } @else if (documents().length === 0) {
+    <app-empty-state
+      icon="description"
+      title="No documents"
+      message="Upload your first document to begin."
+    >
+      <button mat-flat-button color="primary" (click)="upload()">
+        <mat-icon>upload</mat-icon>
+        Upload
+      </button>
+    </app-empty-state>
+  } @else {
+    <div class="grid">
+      @for (doc of documents(); track doc.id) {
+        <mat-card class="doc-card">
+          <mat-card-header>
+            <div mat-card-avatar class="doc-avatar"><mat-icon>article</mat-icon></div>
+            <mat-card-title>{{ doc.title }}</mat-card-title>
+            <mat-card-subtitle>
+              {{ doc.file_size_bytes | fileSize }} · {{ doc.created_at | timeAgo }}
+            </mat-card-subtitle>
+            <button mat-icon-button [matMenuTriggerFor]="menu" class="doc-menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="download(doc)">
+                <mat-icon>download</mat-icon><span>Download</span>
+              </button>
+              <button
+                mat-menu-item
+                [disabled]="doc.status !== 'indexed'"
+                (click)="summarize(doc)"
+              >
+                <mat-icon>auto_awesome</mat-icon><span>Summarize</span>
+              </button>
+              <button
+                mat-menu-item
+                [disabled]="doc.status !== 'indexed'"
+                (click)="quiz(doc)"
+              >
+                <mat-icon>quiz</mat-icon><span>Generate Quiz</span>
+              </button>
+              <button
+                mat-menu-item
+                [disabled]="doc.status !== 'indexed'"
+                (click)="flashcards(doc)"
+              >
+                <mat-icon>style</mat-icon><span>Flashcards</span>
+              </button>
+              <button mat-menu-item (click)="reindex(doc)">
+                <mat-icon>sync</mat-icon><span>Re-index</span>
+              </button>
+              <button mat-menu-item (click)="remove(doc)">
+                <mat-icon>delete</mat-icon><span>Delete</span>
+              </button>
+            </mat-menu>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="doc-footer">
+              <mat-chip [color]="statusColor(doc.status)" highlighted>
+                {{ doc.status }}
+              </mat-chip>
+              @for (tag of doc.tags; track tag.id) {
+                <mat-chip>{{ tag.name }}</mat-chip>
+              }
+            </div>
+            @if (doc.status === 'processing') {
+              <mat-progress-bar mode="indeterminate" class="proc-bar" />
+            }
+            @if (doc.status === 'indexed' && doc.chunk_count) {
+              <p class="meta-text">
+                {{ doc.chunk_count }} chunks · {{ doc.page_count || 1 }} page(s) ·
+                {{ doc.word_count || 0 }} words
+              </p>
+            }
+            @if (doc.status === 'failed' && doc.error_message) {
+              <p class="error-text">{{ doc.error_message }}</p>
+            }
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

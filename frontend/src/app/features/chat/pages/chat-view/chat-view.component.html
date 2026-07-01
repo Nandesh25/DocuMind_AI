@@ -1,0 +1,89 @@
+<div class="chat-layout">
+  <aside class="sessions">
+    <button mat-flat-button color="primary" class="new-chat" (click)="newChat()">
+      <mat-icon>add</mat-icon> New Chat
+    </button>
+    <mat-nav-list>
+      @for (chat of chats(); track chat.id) {
+        <a
+          mat-list-item
+          [class.active]="chat.id === activeChatId()"
+          (click)="selectChat(chat)"
+        >
+          <mat-icon matListItemIcon>forum</mat-icon>
+          <span matListItemTitle>{{ chat.title || 'Untitled chat' }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </aside>
+
+  <section class="conversation">
+    @if (!activeChatId()) {
+      <app-empty-state
+        icon="chat"
+        title="Start a conversation"
+        message="Create a chat and ask questions about your documents."
+      >
+        <button mat-flat-button color="primary" (click)="newChat()">
+          <mat-icon>add</mat-icon> New Chat
+        </button>
+      </app-empty-state>
+    } @else {
+      <div class="messages">
+        @for (msg of messages(); track msg.id) {
+          <div class="bubble-row" [class.user]="msg.role === 'user'">
+            <div class="bubble" [class.assistant]="msg.role === 'assistant'">
+              @if (msg.content) {
+                <div class="bubble-content">{{ msg.content }}</div>
+              } @else {
+                <div class="bubble typing">
+                  <mat-progress-spinner diameter="18" mode="indeterminate" />
+                  <span>Thinking…</span>
+                </div>
+              }
+              @if (msg.role === 'assistant' && msg.sources.length) {
+                <mat-expansion-panel class="sources">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      <mat-icon>menu_book</mat-icon>
+                      Sources ({{ msg.sources.length }})
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  @for (src of msg.sources; track src.chunk_id) {
+                    <div class="source-item">
+                      <span>Rank {{ src.rank }}</span>
+                      <span class="score">
+                        {{ (src.relevance_score ?? 0) | number: '1.2-2' }}
+                      </span>
+                    </div>
+                  }
+                </mat-expansion-panel>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="composer">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Ask about your documents…</mat-label>
+          <textarea
+            matInput
+            rows="1"
+            [ngModel]="prompt()"
+            (ngModelChange)="prompt.set($event)"
+            (keydown.enter)="$event.preventDefault(); send()"
+          ></textarea>
+        </mat-form-field>
+        <button
+          mat-fab
+          color="primary"
+          [disabled]="!prompt().trim() || sending()"
+          (click)="send()"
+        >
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    }
+  </section>
+</div>

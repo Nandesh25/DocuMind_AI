@@ -1,0 +1,59 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: documind
+      POSTGRES_PASSWORD: documind
+      POSTGRES_DB: documind
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U documind"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+
+  chromadb:
+    image: chromadb/chroma:latest
+    environment:
+      ANONYMIZED_TELEMETRY: "false"
+      IS_PERSISTENT: "TRUE"
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma-data:/chroma/chroma
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+      chromadb:
+        condition: service_started
+    environment:
+      POSTGRES_HOST: db
+      OLLAMA_BASE_URL: http://ollama:11434
+      CHROMA_HOST: chromadb
+      CHROMA_PORT: "8000"
+      AUTO_CREATE_TABLES: "true"
+    env_file:
+      - path: .env
+        required: false
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./storage:/app/storage
+
+volumes:
+  pgdata:
+  ollama:
+  chroma-data:

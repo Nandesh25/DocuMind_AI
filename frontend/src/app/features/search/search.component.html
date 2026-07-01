@@ -1,0 +1,131 @@
+<div class="page-container">
+  <h1>Search</h1>
+  <p class="subtitle">
+    Semantic search, or find documents and chats by keyword.
+  </p>
+
+  <mat-button-toggle-group
+    class="mode-toggle"
+    [value]="mode()"
+    (change)="setMode($event.value)"
+  >
+    <mat-button-toggle value="semantic">
+      <mat-icon>auto_awesome</mat-icon> Semantic
+    </mat-button-toggle>
+    <mat-button-toggle value="documents">
+      <mat-icon>description</mat-icon> Documents
+    </mat-button-toggle>
+    <mat-button-toggle value="chats">
+      <mat-icon>chat</mat-icon> Chats
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <div class="search-bar">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>
+        {{ mode() === 'semantic' ? 'Search across your documents…' : 'Search by keyword…' }}
+      </mat-label>
+      <input
+        matInput
+        [ngModel]="query()"
+        (ngModelChange)="query.set($event)"
+        (keyup.enter)="search()"
+      />
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+    <button mat-flat-button color="primary" (click)="search()" [disabled]="loading()">
+      Search
+    </button>
+  </div>
+
+  @if (mode() === 'semantic') {
+    <div class="score-filter">
+      <span>Min relevance: {{ minScore() | number: '1.1-1' }}</span>
+      <mat-slider min="0" max="1" step="0.1" discrete>
+        <input matSliderThumb [ngModel]="minScore()" (ngModelChange)="minScore.set($event)" />
+      </mat-slider>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="center"><mat-progress-spinner mode="indeterminate" diameter="40" /></div>
+  } @else {
+    @switch (mode()) {
+      @case ('semantic') {
+        @if (searched() && results().length === 0) {
+          <app-empty-state
+            icon="search_off"
+            title="No matches"
+            message="Try broader terms or lower the minimum relevance."
+          />
+        } @else if (results().length) {
+          <p class="result-count">{{ results().length }} passage(s)</p>
+          <div class="results">
+            @for (r of results(); track r.chunk_id) {
+              <mat-card class="result-card">
+                <mat-card-header>
+                  <mat-card-title>{{ r.document_title }}</mat-card-title>
+                  <mat-card-subtitle>
+                    @if (r.page_number) { Page {{ r.page_number }} · }
+                    score {{ r.score | number: '1.2-2' }}
+                  </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                  <p class="snippet">{{ r.content }}</p>
+                </mat-card-content>
+              </mat-card>
+            }
+          </div>
+        }
+      }
+
+      @case ('documents') {
+        @if (searched() && documents().length === 0) {
+          <app-empty-state
+            icon="description"
+            title="No documents"
+            message="No document titles match that keyword."
+          />
+        } @else if (documents().length) {
+          <p class="result-count">{{ documents().length }} document(s)</p>
+          <div class="results">
+            @for (doc of documents(); track doc.id) {
+              <mat-card class="result-card clickable" (click)="openDocuments()">
+                <mat-card-header>
+                  <div mat-card-avatar class="avatar"><mat-icon>article</mat-icon></div>
+                  <mat-card-title>{{ doc.title }}</mat-card-title>
+                  <mat-card-subtitle>
+                    {{ doc.status }} · {{ doc.created_at | timeAgo }}
+                  </mat-card-subtitle>
+                </mat-card-header>
+              </mat-card>
+            }
+          </div>
+        }
+      }
+
+      @case ('chats') {
+        @if (searched() && chats().length === 0) {
+          <app-empty-state
+            icon="chat"
+            title="No chats"
+            message="No chats match that keyword."
+          />
+        } @else if (chats().length) {
+          <p class="result-count">{{ chats().length }} chat(s)</p>
+          <div class="results">
+            @for (chat of chats(); track chat.id) {
+              <mat-card class="result-card clickable" (click)="openChat()">
+                <mat-card-header>
+                  <div mat-card-avatar class="avatar"><mat-icon>forum</mat-icon></div>
+                  <mat-card-title>{{ chat.title || 'Untitled chat' }}</mat-card-title>
+                  <mat-card-subtitle>{{ chat.updated_at | timeAgo }}</mat-card-subtitle>
+                </mat-card-header>
+              </mat-card>
+            }
+          </div>
+        }
+      }
+    }
+  }
+</div>

@@ -1,0 +1,78 @@
+<div class="page-container">
+  <h1>Dashboard</h1>
+
+  @if (loading()) {
+    <div class="center"><mat-progress-spinner mode="indeterminate" diameter="40" /></div>
+  } @else {
+    <div class="stats">
+      <mat-card class="stat">
+        <mat-icon>description</mat-icon>
+        <div>
+          <span class="value">{{ totalDocuments() }}</span>
+          <span class="label">Documents</span>
+        </div>
+      </mat-card>
+      <mat-card class="stat">
+        <mat-icon>verified</mat-icon>
+        <div>
+          <span class="value">{{ indexedCount() }}</span>
+          <span class="label">Indexed (recent)</span>
+        </div>
+      </mat-card>
+      <mat-card class="stat">
+        <mat-icon>hourglass_top</mat-icon>
+        <div>
+          <span class="value">{{ processingCount() }}</span>
+          <span class="label">Processing</span>
+        </div>
+      </mat-card>
+      <mat-card class="stat">
+        <mat-icon>chat</mat-icon>
+        <div>
+          <span class="value">{{ chats().length }}</span>
+          <span class="label">Recent chats</span>
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="panels">
+      <mat-card class="panel">
+        <div class="panel-header">
+          <h2>Recent documents</h2>
+          <a mat-button [routerLink]="['/workspaces', workspaceId(), 'documents']">
+            View all
+          </a>
+        </div>
+        <mat-nav-list>
+          @for (doc of documents(); track doc.id) {
+            <a mat-list-item [routerLink]="['/workspaces', workspaceId(), 'documents']">
+              <mat-icon matListItemIcon>article</mat-icon>
+              <span matListItemTitle>{{ doc.title }}</span>
+              <span matListItemLine>{{ doc.status }} · {{ doc.created_at | timeAgo }}</span>
+            </a>
+          } @empty {
+            <p class="empty">No documents yet.</p>
+          }
+        </mat-nav-list>
+      </mat-card>
+
+      <mat-card class="panel">
+        <div class="panel-header">
+          <h2>Recent chats</h2>
+          <a mat-button [routerLink]="['/workspaces', workspaceId(), 'chat']">Open chat</a>
+        </div>
+        <mat-nav-list>
+          @for (chat of chats(); track chat.id) {
+            <a mat-list-item [routerLink]="['/workspaces', workspaceId(), 'chat']">
+              <mat-icon matListItemIcon>forum</mat-icon>
+              <span matListItemTitle>{{ chat.title || 'Untitled chat' }}</span>
+              <span matListItemLine>{{ chat.updated_at | timeAgo }}</span>
+            </a>
+          } @empty {
+            <p class="empty">No chats yet.</p>
+          }
+        </mat-nav-list>
+      </mat-card>
+    </div>
+  }
+</div>

@@ -1,0 +1,64 @@
+h2[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0;
+
+  .title-icon {
+    color: var(--mat-sys-primary);
+  }
+}
+
+.doc-title {
+  margin: 0 24px 8px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+mat-dialog-content {
+  width: 560px;
+  max-width: 100%;
+}
+
+.tab-body {
+  padding: 16px 4px;
+}
+
+.hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.85rem;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.summary-text {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  background: var(--mat-sys-surface-container);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.summary-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.8rem;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 16px;
+  color: var(--mat-sys-on-surface-variant);
+}

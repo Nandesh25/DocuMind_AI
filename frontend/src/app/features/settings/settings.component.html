@@ -1,0 +1,71 @@
+<div class="page-container">
+  <h1>Settings</h1>
+
+  <mat-tab-group>
+    <mat-tab label="Profile">
+      <mat-card class="section">
+        <h2>Profile</h2>
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Full name</mat-label>
+            <input matInput formControlName="full_name" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput [value]="auth.user()?.email" disabled />
+          </mat-form-field>
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="profileForm.invalid || savingProfile()"
+          >
+            Save changes
+          </button>
+        </form>
+      </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Security">
+      <mat-card class="section">
+        <h2>Change password</h2>
+        <form [formGroup]="passwordForm" (ngSubmit)="savePassword()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Current password</mat-label>
+            <input matInput type="password" formControlName="current_password" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>New password</mat-label>
+            <input matInput type="password" formControlName="new_password" />
+            @if (passwordForm.controls.new_password.hasError('pattern') &&
+                 passwordForm.controls.new_password.touched) {
+              <mat-error>
+                Min 8 chars with an uppercase letter, a digit, and a symbol.
+              </mat-error>
+            }
+          </mat-form-field>
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="passwordForm.invalid || savingPassword()"
+          >
+            Update password
+          </button>
+        </form>
+      </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Appearance">
+      <mat-card class="section">
+        <h2>Theme</h2>
+        <mat-slide-toggle
+          [checked]="theme.theme() === 'dark'"
+          (change)="setTheme($event.checked)"
+        >
+          Dark mode
+        </mat-slide-toggle>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
+</div>

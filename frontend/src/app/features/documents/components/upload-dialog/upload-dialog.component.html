@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>Upload document</h2>
+<mat-dialog-content>
+  <div
+    class="dropzone"
+    [class.active]="dragActive()"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave()"
+    (drop)="onDrop($event)"
+  >
+    <mat-icon>cloud_upload</mat-icon>
+    <p>Drag &amp; drop a file here, or</p>
+    <button mat-stroked-button (click)="fileInput.click()">Browse files</button>
+    <input
+      #fileInput
+      type="file"
+      hidden
+      [accept]="accept"
+      (change)="onSelect($event)"
+    />
+    <small>Supported: PDF, DOCX, TXT, MD (max 25MB)</small>
+  </div>
+
+  @if (selectedFile(); as file) {
+    <div class="file-row">
+      <mat-icon>description</mat-icon>
+      <div class="file-info">
+        <span class="name">{{ file.name }}</span>
+        <small>{{ file.size | fileSize }}</small>
+      </div>
+      @if (uploading()) {
+        <mat-progress-spinner diameter="20" mode="indeterminate" />
+      } @else {
+        <button mat-icon-button (click)="clear()"><mat-icon>close</mat-icon></button>
+      }
+    </div>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled]="!selectedFile() || uploading()"
+    (click)="upload()"
+  >
+    Upload
+  </button>
+</mat-dialog-actions>

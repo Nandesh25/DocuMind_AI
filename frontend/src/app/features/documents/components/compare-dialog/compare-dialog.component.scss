@@ -1,0 +1,73 @@
+h2[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .title-icon {
+    color: var(--mat-sys-primary);
+  }
+}
+
+mat-dialog-content {
+  width: 600px;
+  max-width: 100%;
+}
+
+.selectors {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  mat-form-field {
+    flex: 1;
+  }
+
+  .vs-icon {
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.similarity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 16px;
+
+  .label {
+    white-space: nowrap;
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 0.85rem;
+  }
+
+  mat-progress-bar {
+    flex: 1;
+  }
+
+  .score {
+    font-weight: 600;
+    color: var(--mat-sys-primary);
+  }
+}
+
+.comparison-text {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  background: var(--mat-sys-surface-container);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.model {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px;
+  color: var(--mat-sys-on-surface-variant);
+}

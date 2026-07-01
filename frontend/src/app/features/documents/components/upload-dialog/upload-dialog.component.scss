@@ -1,0 +1,51 @@
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px;
+  border: 2px dashed var(--mat-sys-outline);
+  border-radius: 12px;
+  text-align: center;
+  min-width: 380px;
+  transition: all 0.2s ease;
+
+  &.active {
+    border-color: var(--mat-sys-primary);
+    background: var(--mat-sys-primary-container);
+  }
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: var(--mat-sys-primary);
+  }
+
+  small {
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.file-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--mat-sys-surface-container);
+
+  .file-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    .name {
+      font-weight: 500;
+    }
+    small {
+      color: var(--mat-sys-on-surface-variant);
+    }
+  }
+}

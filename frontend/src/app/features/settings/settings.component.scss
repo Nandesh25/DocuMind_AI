@@ -1,0 +1,20 @@
+.section {
+  padding: 24px;
+  margin-top: 16px;
+  max-width: 560px;
+
+  h2 {
+    margin-top: 0;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  button {
+    align-self: flex-start;
+    margin-top: 8px;
+  }
+}
