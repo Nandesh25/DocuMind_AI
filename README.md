@@ -1,5 +1,9 @@
 # DocuMind AI — Enterprise Document Intelligence Platform
 
+[![CI](https://github.com/Nandesh25/DocuMind_AI/actions/workflows/ci.yml/badge.svg)](https://github.com/Nandesh25/DocuMind_AI/actions/workflows/ci.yml)
+[![Docker Images](https://github.com/Nandesh25/DocuMind_AI/actions/workflows/docker-images.yml/badge.svg)](https://github.com/Nandesh25/DocuMind_AI/actions/workflows/docker-images.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A production-ready, fully **open-source** GenAI platform where authenticated users
 upload documents, organize them into workspaces, and interact with them using
 **Retrieval-Augmented Generation (RAG)** — plus AI summaries, semantic search,
